@@ -18,7 +18,8 @@
             text-align: center;
         }
 
-        button, input {
+        button,
+        input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -32,6 +33,23 @@
 
         div {
             margin-bottom: 20px;
+        }
+
+        .notification {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: green;
+        }
+
+        .error {
+            background-color: red;
         }
     </style>
 </head>
@@ -51,11 +69,23 @@
         <button id="updateUnlockDuration" disabled>Update Unlock Duration</button>
     </div>
 
+    <div id="notification" class="notification"></div>
+
     <script>
         let bleDevice;
         let accessService;
         let accessCodeCharacteristic;
         let unlockDurationCharacteristic;
+
+        function showNotification(message, isSuccess) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + (isSuccess ? 'success' : 'error');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
 
         document.getElementById('connect').addEventListener('click', function () {
             navigator.bluetooth.requestDevice({
@@ -88,6 +118,7 @@
                 })
                 .catch(error => {
                     console.error('Connection failed!', error);
+                    showNotification('Connection failed!', false);
                 });
         });
 
@@ -98,9 +129,11 @@
                 accessCodeCharacteristic.writeValue(new TextEncoder().encode(accessCodeValue))
                     .then(() => {
                         console.log('Access code updated!');
+                        showNotification('Access code updated!', true);
                     })
                     .catch(error => {
                         console.error('Failed to update access code', error);
+                        showNotification('Failed to update access code', false);
                     });
             }
         });
@@ -112,9 +145,11 @@
                 unlockDurationCharacteristic.writeValue(unlockDurationValue.buffer)
                     .then(() => {
                         console.log('Unlock duration updated!');
+                        showNotification('Unlock duration updated!', true);
                     })
                     .catch(error => {
                         console.error('Failed to update unlock duration', error);
+                        showNotification('Failed to update unlock duration', false);
                     });
             }
         });
