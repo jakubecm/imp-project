@@ -113,7 +113,7 @@ void app_main()
         {
             printf("Key pressed: %c\n", key);
             input_code[input_pos++] = key; // Store keypress and increment position
-            if (input_pos == 4 && input_code[0] != '#')
+            if (input_pos == 4)
             {
                 input_code[input_pos] = '\0'; // Null terminate string
 
