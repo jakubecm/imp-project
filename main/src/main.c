@@ -177,6 +177,13 @@ void app_main()
                 gpio_set_level(PIN_GREEN_LED, 0);          // Turn off green LED
                 gpio_set_level(PIN_RED_LED, 1);            // Turn red LED back on
             }
+
+            else if (input_pos == 6 && input_code[0] == '#' && input_code[5] != '*')
+            {
+                blink_incorrect_code();
+                input_pos = 0;
+                memset(input_code, 0, sizeof(input_code)); // Clear the input buffer
+            }
         }
         vTaskDelay(100 / portTICK_PERIOD_MS); // Polling delay
     }
