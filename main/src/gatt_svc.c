@@ -79,9 +79,16 @@ static int unlock_duration_char_access_cb(uint16_t conn_handle, uint16_t attr_ha
         {
             if (is_device_unlocked())
             {
-                memcpy(&unlock_duration, ctxt->om->om_data, sizeof(unlock_duration));
-                update_nvs_unlock_duration(unlock_duration);
-                return 0;
+                int32_t new_duration;
+                memcpy(&new_duration, ctxt->om->om_data, sizeof(new_duration));
+
+                if (new_duration > 0)
+                {
+                    new_duration = new_duration * 1000; // Convert seconds to milliseconds
+                    unlock_duration = new_duration;
+                    update_nvs_unlock_duration(unlock_duration);
+                    return 0;
+                }
             }
             return BLE_ATT_ERR_WRITE_NOT_PERMITTED;
         }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Access Control</title>
+</head>
+
+<body>
+    <h1>ESP32 Access Control Settings</h1>
+    <button id="connect">Connect to ESP32</button><br><br>
+
+    <div>
+        <label for="accessCode">New Access Code:</label>
+        <input type="text" id="accessCode" placeholder="Enter new access code" disabled>
+        <button id="updateAccessCode" disabled>Update Access Code</button>
+    </div>
+    <div>
+        <label for="unlockDuration">Unlock Duration (seconds):</label>
+        <input type="number" id="unlockDuration" placeholder="Enter new duration" disabled>
+        <button id="updateUnlockDuration" disabled>Update Unlock Duration</button>
+    </div>
+
+    <script>
+        let bleDevice;
+        let accessService;
+        let accessCodeCharacteristic;
+        let unlockDurationCharacteristic;
+
+        document.getElementById('connect').addEventListener('click', function () {
+            navigator.bluetooth.requestDevice({
+                acceptAllDevices: true,
+                optionalServices: ['0000fff0-0000-1000-8000-00805f9b34fb']
+            })
+                .then(device => {
+                    console.log('Connecting to device...');
+                    bleDevice = device;
+                    return device.gatt.connect();
+                })
+                .then(server => {
+                    console.log('Getting service...');
+                    return server.getPrimaryService('0000fff0-0000-1000-8000-00805f9b34fb');
+                })
+                .then(service => {
+                    accessService = service;
+                    return Promise.all([
+                        service.getCharacteristic('0000fff1-0000-1000-8000-00805f9b34fb'),
+                        service.getCharacteristic('0000fff2-0000-1000-8000-00805f9b34fb')
+                    ]);
+                })
+                .then(characteristics => {
+                    [accessCodeCharacteristic, unlockDurationCharacteristic] = characteristics;
+                    document.getElementById('accessCode').disabled = false;
+                    document.getElementById('unlockDuration').disabled = false;
+                    document.getElementById('updateAccessCode').disabled = false;
+                    document.getElementById('updateUnlockDuration').disabled = false;
+                    console.log('Connected and ready to update settings!');
+                })
+                .catch(error => {
+                    console.error('Connection failed!', error);
+                });
+        });
+
+        document.getElementById('updateAccessCode').addEventListener('click', function () {
+            const accessCodeValue = document.getElementById('accessCode').value;
+
+            if (accessCodeCharacteristic) {
+                accessCodeCharacteristic.writeValue(new TextEncoder().encode(accessCodeValue))
+                    .then(() => {
+                        console.log('Access code updated!');
+                    })
+                    .catch(error => {
+                        console.error('Failed to update access code', error);
+                    });
+            }
+        });
+
+        document.getElementById('updateUnlockDuration').addEventListener('click', function () {
+            const unlockDurationValue = new Uint32Array([parseInt(document.getElementById('unlockDuration').value)]);
+
+            if (unlockDurationCharacteristic) {
+                unlockDurationCharacteristic.writeValue(unlockDurationValue.buffer)
+                    .then(() => {
+                        console.log('Unlock duration updated!');
+                    })
+                    .catch(error => {
+                        console.error('Failed to update unlock duration', error);
+                    });
+            }
+        });
+    </script>
+</body>
+
+</html>
