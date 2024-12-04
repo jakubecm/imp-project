@@ -1,4 +1,8 @@
-// keypad.c
+/**
+ * @file keypad.c
+ * @brief Source file for the keypad functionalities.
+ * @author Milan Jakubec (xjakub41)
+ */
 #include "keypad.h"
 #include <string.h>
 #include <stdio.h>

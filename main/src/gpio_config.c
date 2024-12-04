@@ -1,3 +1,8 @@
+/**
+ * @file gpio_config.c
+ * @brief Source file for GPIO configuration of the ESP32.
+ * @author Milan Jakubec (xjakub41)
+ */
 #include "gpio_config.h"
 
 // GPIO pin setup

@@ -1,8 +1,15 @@
-/*
- * SPDX-FileCopyrightText: 2024 Espressif Systems (Shanghai) CO LTD
+/**
+ * @file gatt_svc.c
+ * @brief Source file for GATT (Generic Attribute Profile) service functionalities.
+ * @author Milan Jakubec (xjakub41)
  *
+ * Some parts of this code have been adapted from the NimBLE library examples.
+ *
+ * SPDX-FileCopyrightText: 2024 Espressif Systems (Shanghai) CO LTD
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
+ *
  */
+
 /* Includes */
 #include "gatt_svc.h"
 #include "gap.h"

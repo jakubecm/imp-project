@@ -1,3 +1,9 @@
+/**
+ * @file access_control.c
+ * @brief Source file for access control functions.
+ * @author Milan Jakubec (xjakub41)
+ *
+ */
 #include "access_control.h"
 #include "gpio_config.h"
 #include "nvs_flash.h"

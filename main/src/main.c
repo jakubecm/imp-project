@@ -1,4 +1,9 @@
-// main.c
+/**
+ * @file main.c
+ * @brief Source file for the main application.
+ * @author Milan Jakubec (xjakub41)
+ */
+
 #include "keypad.h"
 #include "esp_log.h"
 #include "sdkconfig.h"
