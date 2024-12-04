@@ -7,6 +7,8 @@
 #include "esp_mac.h"
 
 char access_code[5] = "2165";
+int32_t unlock_duration = 10000; // ms, so 10 seconds
+bool device_unlocked = false;
 
 void init_nvs()
 {
@@ -21,6 +23,14 @@ void init_nvs()
         nvs_set_str(my_handle, "access_code", access_code);
         nvs_commit(my_handle);
     }
+
+    // Read stored unlock duration or set default
+    if (nvs_get_i32(my_handle, "unlock_duration", &unlock_duration) != ESP_OK)
+    {
+        nvs_set_i32(my_handle, "unlock_duration", unlock_duration);
+        nvs_commit(my_handle);
+    }
+
     nvs_close(my_handle);
 }
 
@@ -30,6 +40,16 @@ void update_nvs_access_code(char *new_code)
     nvs_open("storage", NVS_READWRITE, &my_handle);
 
     nvs_set_str(my_handle, "access_code", new_code);
+    nvs_commit(my_handle);
+    nvs_close(my_handle);
+}
+
+void update_nvs_unlock_duration(int new_duration)
+{
+    nvs_handle_t my_handle;
+    nvs_open("storage", NVS_READWRITE, &my_handle);
+
+    nvs_set_i32(my_handle, "unlock_duration", new_duration);
     nvs_commit(my_handle);
     nvs_close(my_handle);
 }
@@ -54,4 +74,14 @@ void blink_success()
         gpio_set_level(PIN_GREEN_LED, 0);
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
+}
+
+void set_device_unlocked(bool state)
+{
+    device_unlocked = state;
+}
+
+bool is_device_unlocked()
+{
+    return device_unlocked;
 }

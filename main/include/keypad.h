@@ -12,7 +12,7 @@
 // Pins connected to keyboard:
 #define COLUMNS {27, 12, 17}
 #define ROWS {14, 26, 25, 16}
-#define DEBOUNCE_TIME 50 // milliseconds
+#define DEBOUNCE_TIME 25 // milliseconds
 
 char scan_keypad();
 

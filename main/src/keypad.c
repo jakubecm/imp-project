@@ -42,7 +42,7 @@ char scan_keypad()
                 key_released = true; // Mark key as released if it is no longer pressed
             }
         }
-        gpio_set_level(cols[col], 1); // Deactivate column regardless of detection
+        gpio_set_level(cols[col], 1); // Deactivate column regardless of detection just in case
     }
     return '\0'; // No key pressed
 }
