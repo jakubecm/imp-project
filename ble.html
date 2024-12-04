@@ -115,6 +115,7 @@
                     document.getElementById('updateAccessCode').disabled = false;
                     document.getElementById('updateUnlockDuration').disabled = false;
                     console.log('Connected and ready to update settings!');
+                    showNotification('Connected to device successfully!', true);
                 })
                 .catch(error => {
                     console.error('Connection failed!', error);
