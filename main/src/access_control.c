@@ -12,7 +12,16 @@ bool device_unlocked = false;
 
 void init_nvs()
 {
-    nvs_flash_init();
+
+    esp_err_t err = nvs_flash_init();
+
+    // If nvs_flash_init fails, erase and try again
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        err = nvs_flash_init();
+    }
+
     nvs_handle_t my_handle;
     nvs_open("storage", NVS_READWRITE, &my_handle);
 
